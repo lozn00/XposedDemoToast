@@ -50,14 +50,14 @@ jobs:
             updateLog=`git log --pretty=format:"%s" -1`
             echo "updateLog=$updateLog" >> $GITHUB_ENV
             
-    # 获取发送者fffff
+    # 获取发送者
     - name: Sender
       run: echo "sender=$GITHUB_ACTOR" >> $GITHUB_ENV
         
     # 向钉钉发送消息
     - name: dingtalk
       run: | 
-            curl '${{ secrets.DINGDING_WEBHOOK }}' -H 'Content-Type: application/json' -d '{"msgtype": "text", "text": {"content":"吃饭! \n触发人：${{ env.sender }} \n版本：${{ env.versionResult }} \n提交内容：${{ env.updateLog }} \n下载地址：${{ secrets.PGY_URL }}"}}'
+            curl '${{ secrets.DINGDING_WEBHOOK }}' -H 'Content-Type: application/json' -d '{"msgtype": "text", "text": {"content":"新版本发布拉! \n触发人：${{ env.sender }} \n版本：${{ env.versionResult }} \n提交内容：${{ env.updateLog }} \n下载地址：${{ secrets.PGY_URL }}"}}'
     # 发送邮件
     - name: Send mail
       uses: dawidd6/action-send-mail@v3
@@ -65,10 +65,10 @@ jobs:
         server_address: smtp.qq.com
         server_port: 465
         username: ${{ secrets.MAILUSERNAME }}
-        password: eycsgmghkeawbhac
+        password: ${{ secrets.MAILPASSWORD }}
         subject: Github Actions job result
         to: qssq521@gmail.com
         from: TeaOf 
         secure: true
-        body: "吃饭! \n触发人：${{ env.sender }} \n版本：${{ env.versionResult }} \n提交内容：${{ env.updateLog }} \n下载地址：${{ secrets.PGY_URL }}"
+        body: "新版本发布! \n触发人：${{ env.sender }} \n版本：${{ env.versionResult }} \n提交内容：${{ env.updateLog }} \n下载地址：${{ secrets.PGY_URL }}"
 
