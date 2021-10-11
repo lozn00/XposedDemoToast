@@ -1,4 +1,4 @@
-name: Android CItest
+name: TestPostMsg
 
 on:
   push:
@@ -73,7 +73,8 @@ jobs:
       env:
           CHANNEL_ID: lojunChannel#${{ secrets.TELEGRAM_TO }}
           BOT_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          FILE: app/Build.gradle #${{ github.workspace }}/app/build/outputs/apk/release/app-release.apk
+          FILE: app/build.gradle
+          #${{ github.workspace }}/app/build/outputs/apk/release/app-release.apk
           COMMIT_MESSAGE: |+
             New push to github\!
             ```
