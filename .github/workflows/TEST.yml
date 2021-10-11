@@ -23,7 +23,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Upload File to Pgyer
-      run: curl -F 'file=@app/build/outputs/apk/debug/app-debug.apk' -F "_api_key=${{ secrets.PGY_APIKEY }}" -F "uKey=${{ secrets.PGYER_USER_KEY }}" -F "buildInstallType=3" https://www.pgyer.com/apiv2/app/upload
+      run: curl -F 'file=/home/runner/work/XposedDemoToast/XposedDemoToast/build.gradle' -F "_api_key=${{ secrets.PGY_APIKEY }}" -F "uKey=${{ secrets.PGYER_USER_KEY }}" -F "buildInstallType=3" https://www.pgyer.com/apiv2/app/upload
       # 获取发送者
     - name: Sender
       run: echo "sender=$GITHUB_ACTOR" >> $GITHUB_ENV
