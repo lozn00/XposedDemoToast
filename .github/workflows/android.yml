@@ -50,7 +50,7 @@ jobs:
             updateLog=`git log --pretty=format:"%s" -1`
             echo "updateLog=$updateLog" >> $GITHUB_ENV
             
-    # 获取发送者
+    # 获取发送者fffff
     - name: Sender
       run: echo "sender=$GITHUB_ACTOR" >> $GITHUB_ENV
         
