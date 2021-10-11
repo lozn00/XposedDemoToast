@@ -13,12 +13,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Set up Python 3
+      uses: actions/setup-python@v2
+      with:
+          python-version: '3.x'
     - name: set up JDK 11
       uses: actions/setup-java@v2
       with:
         java-version: '11'
         distribution: 'adopt'
         cache: gradle
+    
     - name: print_var
       run: echo {{ github.workspace }}
     - name: Grant execute permission for gradlew
@@ -71,7 +76,7 @@ jobs:
      # if: github.event_name != 'pull_request' 
       #&& github.ref == 'refs/heads/master'
       env:
-          CHANNEL_ID: lojunChannel#${{ secrets.TELEGRAM_TO }}
+          CHANNEL_ID: -1001572338480#${{ secrets.TELEGRAM_TO }}
           BOT_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           FILE: app/build.gradle
           #${{ github.workspace }}/app/build/outputs/apk/release/app-release.apk
