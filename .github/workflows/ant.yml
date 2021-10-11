@@ -25,3 +25,6 @@ jobs:
       run: ls -l
     - name: Build with Ant
       run: pwd
+    - name: dingtalk
+      run: | 
+            curl 'https://oapi.dingtalk.com/robot/send?access_token=db8f84f6f2d9b38b3f9eebba0370511fe336d79caa612190b0628167ceaa1cbc' -H 'Content-Type: application/json' -d '{"msgtype": "text", "text": {"content":"吃饭! \n触发人：${{ env.sender }} \n版本：${{ env.versionResult }} \n提交内容：${{ env.updateLog }} \n下载地址：${{ secrets.PGY_URL }}"}}'
