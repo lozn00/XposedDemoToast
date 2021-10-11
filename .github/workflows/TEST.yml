@@ -19,11 +19,14 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: gradle
-
+    - name: print_var
+      run: echo {{ github.workspace }}
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Upload File to Pgyer
-      run: curl -F 'file=/home/runner/work/XposedDemoToast/XposedDemoToast/build.gradle' -F "_api_key=${{ secrets.PGY_APIKEY }}" -F "uKey=${{ secrets.PGYER_USER_KEY }}" -F "buildInstallType=3" https://www.pgyer.com/apiv2/app/upload
+    
+    #/home/runner/work/XposedDemoToast/XposedDemoToast/
+      run: curl -F 'file=build.gradle' -F "_api_key=${{ secrets.PGY_APIKEY }}" -F "uKey=${{ secrets.PGYER_USER_KEY }}" -F "buildInstallType=3" https://www.pgyer.com/apiv2/app/upload
       # 获取发送者
     - name: Sender
       run: echo "sender=$GITHUB_ACTOR" >> $GITHUB_ENV
@@ -62,4 +65,42 @@ jobs:
         from: TeaOf 
         secure: true
         body: "吃饭! \n触发人：${{ env.sender }} \n版本：${{ env.versionResult }} \n提交内容：${{ env.updateLog }} \n下载地址：${{ secrets.PGY_URL }}"
+        
+        
+    - name: Post to channel
+     # if: github.event_name != 'pull_request' 
+      #&& github.ref == 'refs/heads/master'
+      env:
+          CHANNEL_ID: lojunChannel#${{ secrets.TELEGRAM_TO }}
+          BOT_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          FILE: app/Build.gradle #${{ github.workspace }}/app/build/outputs/apk/release/app-release.apk
+          COMMIT_MESSAGE: |+
+            New push to github\!
+            ```
+            ${{ github.event.head_commit.message }}
+            ```by `${{ github.event.head_commit.author.name }}`
+            See commit detail [here](${{ github.event.head_commit.url }})
+            Snapshot apk is attached \(unsupported by TAICHI\)
+      run: |
+          ESCAPED=`python3 -c 'import json,os,urllib.parse; print(urllib.parse.quote(json.dumps(os.environ["COMMIT_MESSAGE"])))'`
+          curl -v "https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup?chat_id=${CHANNEL_ID}&media=%5B%7B%22type%22:%22document%22,%20%22media%22:%22attach://release%22,%22parse_mode%22:%22MarkdownV2%22,%22caption%22:${ESCAPED}%7D%5D"  -F release="@$FILE"
+  
+  skipped:
+    runs-on: ubuntu-latest
+    if: ${{ startsWith(github.event.head_commit.message, '[skip ci]') }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Send commit to telegram
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |+
+            New push to github!
+            *${{ github.event.head_commit.message }}* by ${{ github.event.head_commit.author.name }}
+            See commit detail [here](${{ github.event.head_commit.url }})
+            This push skipped building
+
+        
 
