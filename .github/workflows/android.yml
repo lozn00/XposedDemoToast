@@ -65,7 +65,7 @@ jobs:
         server_address: smtp.qq.com
         server_port: 465
         username: ${{ secrets.MAILUSERNAME }}
-        password: ${{ secrets.MAILPASSWORD }}
+        password: eycsgmghkeawbhac
         subject: Github Actions job result
         to: qssq521@gmail.com
         from: TeaOf 
